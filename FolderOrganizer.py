@@ -49,6 +49,7 @@ code_extensions = {".ipynb",".py", ".js", ".html", ".css", ".cpp", ".c", ".java"
 iterate over all files in the folder, if a folder for that file type doesn't exist
 create one, move file to that folder.
 """
+# Receives a file extension and returns the corresponding folder it need to be moved to.
 def get_folder_name(file_extension):
     if file_extension == '':
         return "Others"
@@ -75,7 +76,7 @@ def get_folder_name(file_extension):
 for file in os.listdir():
     # Create Path object for file.
     file_path = Path(file)
-    # Get the file extension.
+    # Get the file name & extension.
     file_name, file_extension = file_path.stem, file_path.suffix
     # Get the folder name for that specific file type.
     folder_name = get_folder_name(file_extension)
@@ -88,21 +89,9 @@ for file in os.listdir():
     print(file_name + " moved!") 
 
 """
-for file in os.listdir():
-    f = Path(file)
-    name, ext = f.stem, f.suffix
-    if ext == '':
-        ext = 'Other'
-    else:
-        ext=ext[1:].upper()+'s'
-
-    if not os.path.exists(ext):
-        os.mkdir(ext)
-        print(ext + " created!")
-    shutil.move(file, ext)
-    print(name + " moved!")
+Future ideas : 
+[V] make it smarter, sort by photos, documents and so on
+[ ] Make it put stuff in the corresponding windows default folders like Pictures
+[ ] Use AI to figure out what it is, what course it relates to, sort it into my courses folders(?)
+[ ] Analyze what's the biggest files I have there
 """
-# Future ideas : make it smarter, sort by photos, documents and so on
-# Make it put stuff in the corresponding windows default folders like Pictures
-# Use AI to figure out what it is, what course it relates to, sort it into my courses folders(?)
-# Analyze what's the biggest files I have there
