@@ -15,7 +15,7 @@ from pathlib import Path
 import shutil
 import json
 
-os.chdir('C:/Users/danie/Downloads/.test')
+os.chdir('C:/Users/danie/Downloads')
 
 # Known file extensions:
     
@@ -76,6 +76,7 @@ file_path_dict = {}
 
 # Iterate through all the files in the dir.
 for file in os.listdir():
+    
     # Create Path object for file.
     file_path = Path(file)
     
@@ -92,12 +93,38 @@ for file in os.listdir():
     # Create a new folder if a folder by that name doesn't exist yet.
     if not os.path.exists(new_file_path):
         os.mkdir(new_file_path)
-        
+    
+# --------------------------- Under Construction ------------------------------
+
+    # Handle situation where Artmarket.png already exists in the new path.
+    
+    new_full_file_path = f"{new_file_path}/{file}"
+    
+    new_file_name = file_name
+    
+    i = 1;
+    
+    file_name_changed = False
+    
+    # If it does exist, rename.
+    while(os.path.exists(new_full_file_path)):
+        new_file_name = f"{file_name}_{i}"
+        new_full_file_path = f"{new_file_path}/{new_file_name}{file_extension}"
+        i += 1
+        file_name_changed = True
+    
+    if file_name_changed:
+        os.rename(file,f"{new_file_name}{file_extension}")
+    
+    #file = new_file_name
+    
     # Move file to the corresponding folder.
-    shutil.move(file, new_file_path)
+    shutil.move(f"{new_file_name}{file_extension}", new_file_path)
+    
+# -----------------------------------------------------------------------------
     
     # Log the file name, source path and new path.
-    file_path_dict[file] = {"source_path" : str(file_path.resolve()) , "new_path" : f"{new_file_path}/{file}"}
+    file_path_dict[f"{new_file_name}{file_extension}"] = {"source_path" : str(file_path.resolve()) , "new_path" : f"{new_full_file_path}"}
     
     
 # Create a json file that contains the source path and new path for each file
@@ -114,6 +141,9 @@ Future ideas :
 [V] make it smarter, sort by photos, documents and so on.
 [V] Make it put stuff in the corresponding windows default folders like Pictures.
 [V] Make it reverseable so I don't have to manually move the files after each test.
+[V] Handle conflicts of files with the same name existing in the target folder.
+[ ] Make sure it doesn't get confused by filenames with dots 
+    (e.g: Anaconda3-2024.10-1-Windows-x86_64.exe)
 [ ] Make it BFS/DFS to include files inside folders.
 [ ] Use AI to figure out what it is, what course it relates to, sort it into my courses folders(?)
 [ ] Analyze what's the biggest files I have there
