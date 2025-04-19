@@ -9,13 +9,17 @@ creates a folder for each filetype, moves all files to corresponding folder.
 # os.getcwd() - returns the path of the current directory.
 # os.chdir - changes current folder to given folder in path.
 # os.listdir() - returns a list of all filenames in the current folder.
-
+"""
+Main Idea:
+iterate over all files in the folder, if a folder for that file type doesn't exist
+create one, move file to that folder.
+"""
 import os
 from pathlib import Path
 import shutil
 import json
 
-os.chdir('C:/Users/danie/Downloads')
+
 
 # Known file extensions:
     
@@ -43,16 +47,29 @@ archive_extensions = {".zip",".ZIP", ".rar", ".7z", ".tar", ".gz", ".bz2",".tgz"
 # Code/source files (bonus!) - Code/Source Files
 code_extensions = {".ipynb",".py", ".js", ".html", ".css", ".cpp", ".c", ".java", ".ts", ".json", ".xml", ".sh"}
 
-"""
-iterate over all files in the folder, if a folder for that file type doesn't exist
-create one, move file to that folder.
-"""
+# Executables
+exe_extensions = {".exe",".msi",".ica"}
 
+# Diagrams
+diagram_extensions = {".drawio",".vpp",".bak_000f",".tdl"}
+
+# Books
+book_extensions = {".epub"}
+
+# Exports a log file based on moved file logs so far.
+def export_log_file():
+    # Create a json file that contains the source path and new path for each file
+    log_file_descriptor = open("moved_files_log.json",'w')
+
+    # Write the file to source and new paths map into the json.
+    log_file_descriptor.write(json.dumps(file_path_dict))
+
+    # Close the file descriptor.
+    log_file_descriptor.close()
+    
 # Receives a file extension and returns the path the file needs to be sent to.
 def get_new_file_path(file_extension):
-    if file_extension == '':
-        return "Others"
-    elif file_extension in image_extensions:
+    if file_extension in image_extensions:
         return "C:/Users/danie/Pictures"
     elif file_extension in video_extensions:
         return "C:/Users/danie/Videos"
@@ -68,73 +85,76 @@ def get_new_file_path(file_extension):
         return "C:/Users/danie/Documents/Archives"
     elif file_extension in code_extensions:
         return "C:/Users/danie/Documents/Code Files"
+    elif file_extension in exe_extensions:
+        return "C:/Users/danie/Documents/Executables"
+    elif file_extension in diagram_extensions:
+        return "C:/Users/danie/Documents/Diagrams"
+    elif file_extension in book_extensions:
+        return "C:/Users/danie/Documents/Books"
     else:
-        return file_extension[1:].upper() + 's'
+        return "C:/Users/danie/Documents/Others"
 
 # A dictionary to log the source and new paths for each file.
 file_path_dict = {}
 
-# Iterate through all the files in the dir.
-for file in os.listdir():
-    
-    # Create Path object for file.
-    file_path = Path(file)
-    
-    # Skip folders for now
-    if file_path.is_dir():
-        continue
-    
-    # Get the file name & extension.
-    file_name, file_extension = file_path.stem, file_path.suffix
-    
-    # Get new file path
-    new_file_path = get_new_file_path(file_extension)
-    
-    # Create a new folder if a folder by that name doesn't exist yet.
-    if not os.path.exists(new_file_path):
-        os.mkdir(new_file_path)
-    
-# --------------------------- Under Construction ------------------------------
+def move_files(dir_path):
+    os.chdir(dir_path)
+    print(os.listdir())
+    files = os.listdir()
+    # Iterate through all the files in the dir.
+    for file in files:
+        # Create Path object for file.
+        file_path = Path(file)
+        
+        if file_path.is_dir():    
+            # Recursively enter folder and repeat the process, log stays the main log
+            move_files(str(file_path.resolve()))
+            os.chdir(dir_path)
+            os.rmdir(str(file_path.resolve()))
+            continue
+        
+        # Get the file name & extension.
+        file_name, file_extension = file_path.stem, file_path.suffix
+        
+        # Get new file path
+        new_file_path = get_new_file_path(file_extension)
+        
+        # Create a new folder if a folder by that name doesn't exist yet.
+        if not os.path.exists(new_file_path):
+            os.mkdir(new_file_path)
+        
+        # Handle situation where Artmarket.png already exists in the new path.
+        
+        new_full_file_path = f"{new_file_path}/{file}"
+        
+        new_file_name = file_name
+        
+        i = 1;
+        
+        file_name_changed = False
+        
+        # If it does exist, rename.
+        while(os.path.exists(new_full_file_path)):
+            new_file_name = f"{file_name}_{i}"
+            new_full_file_path = f"{new_file_path}/{new_file_name}{file_extension}"
+            i += 1
+            file_name_changed = True
+        
+        try:
+            if file_name_changed:
+                os.rename(file,f"{new_file_name}{file_extension}")
+            # Move file to the corresponding folder.
+            shutil.move(f"{new_file_name}{file_extension}", new_file_path)
+        except:
+            # Create a reversible log file in case of failure
+            print("Caught Exception!")
+            export_log_file()
+        
+        # Log the file name, source path and new path.
+        file_path_dict[f"{new_file_name}{file_extension}"] = {"source_path" : str(file_path.resolve()) , "new_path" : f"{new_full_file_path}"}
 
-    # Handle situation where Artmarket.png already exists in the new path.
-    
-    new_full_file_path = f"{new_file_path}/{file}"
-    
-    new_file_name = file_name
-    
-    i = 1;
-    
-    file_name_changed = False
-    
-    # If it does exist, rename.
-    while(os.path.exists(new_full_file_path)):
-        new_file_name = f"{file_name}_{i}"
-        new_full_file_path = f"{new_file_path}/{new_file_name}{file_extension}"
-        i += 1
-        file_name_changed = True
-    
-    if file_name_changed:
-        os.rename(file,f"{new_file_name}{file_extension}")
-    
-    #file = new_file_name
-    
-    # Move file to the corresponding folder.
-    shutil.move(f"{new_file_name}{file_extension}", new_file_path)
-    
-# -----------------------------------------------------------------------------
-    
-    # Log the file name, source path and new path.
-    file_path_dict[f"{new_file_name}{file_extension}"] = {"source_path" : str(file_path.resolve()) , "new_path" : f"{new_full_file_path}"}
-    
-    
-# Create a json file that contains the source path and new path for each file
-log_file_descriptor = open("moved_files_log.json",'w')
-
-# Write the file to source and new paths map into the json.
-log_file_descriptor.write(json.dumps(file_path_dict))
-
-# Close the file descriptor.
-log_file_descriptor.close()
+move_files('C:/Users/danie/Downloads/.test')    
+export_log_file()
 
 """
 Future ideas : 
@@ -142,9 +162,14 @@ Future ideas :
 [V] Make it put stuff in the corresponding windows default folders like Pictures.
 [V] Make it reverseable so I don't have to manually move the files after each test.
 [V] Handle conflicts of files with the same name existing in the target folder.
+[ ] Make it BFS/DFS to include files inside folders.
+[ ] Handle invisible file name conflicts with folders:
+    (e.g: "root/ArtMarket.png", "root/archive/ArtMarket.png" where archive is a folder inside root)
+[ ] Make it run or a loop or event triggered, whenever a file is downloaded, it's
+    sent to the right folder.
 [ ] Make sure it doesn't get confused by filenames with dots 
     (e.g: Anaconda3-2024.10-1-Windows-x86_64.exe)
-[ ] Make it BFS/DFS to include files inside folders.
 [ ] Use AI to figure out what it is, what course it relates to, sort it into my courses folders(?)
+    Idea: Train a model to cluster files to categories? books? finances?
 [ ] Analyze what's the biggest files I have there
 """
