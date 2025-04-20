@@ -153,7 +153,7 @@ def move_files(dir_path):
         # Log the file name, source path and new path.
         file_path_dict[f"{new_file_name}{file_extension}"] = {"source_path" : str(file_path.resolve()) , "new_path" : f"{new_full_file_path}"}
 
-move_files('C:/Users/danie/Downloads/.test')    
+move_files('C:/Users/danie/Downloads')    
 export_log_file()
 
 """
@@ -162,7 +162,8 @@ Future ideas :
 [V] Make it put stuff in the corresponding windows default folders like Pictures.
 [V] Make it reverseable so I don't have to manually move the files after each test.
 [V] Handle conflicts of files with the same name existing in the target folder.
-[ ] Make it BFS/DFS to include files inside folders.
+[V] Make it BFS/DFS to include files inside folders.
+[ ] Folders where file structure is important (?)
 [ ] Handle invisible file name conflicts with folders:
     (e.g: "root/ArtMarket.png", "root/archive/ArtMarket.png" where archive is a folder inside root)
 [ ] Make it run or a loop or event triggered, whenever a file is downloaded, it's

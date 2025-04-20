@@ -7,7 +7,7 @@ Created on Sat Apr 19 15:19:45 2025
 
 import os
 import json
-os.chdir("C:/Users/danie/Downloads/.test")
+os.chdir("C:/Users/danie/Downloads")
 status_file_descriptor = open("file_move_status.json",'r')
 file_move_status = json.load(status_file_descriptor)
 passes = 0
