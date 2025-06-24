@@ -61,6 +61,7 @@ You can customize which extensions go into which folders by editing the extensio
 Inside the script:
 
 ```python
+# Choose file extensions
 image_extensions = {".jpg",".HEIC",".JPEG",".jpeg", ".png", ".gif", ".bmp", ".tiff", ".tif", ".webp", ".heic", ".raw", ".cr2", ".nef", ".orf", ".sr2"}
 video_extensions = {".mp4",".MP4", ".mov", ".avi", ".mkv", ".flv", ".wmv", ".webm", ".mpeg", ".mpg", ".3gp", ".m4v"}
 audio_extensions = {".mp3", ".wav", ".aac", ".flac", ".ogg", ".m4a", ".wma"}
@@ -72,7 +73,32 @@ code_extensions = {".ipynb",".py", ".js", ".html", ".css", ".cpp", ".c", ".java"
 exe_extensions = {".exe",".msi",".ica"}
 diagram_extensions = {".drawio",".vpp",".bak_000f",".tdl"}
 book_extensions = {".epub"}
-# etc.
+
+# Choose where they go
+if file_extension in image_extensions:
+    return Path(os.path.join(user_home,"Pictures"))
+elif file_extension in video_extensions:
+    return Path(os.path.join(user_home,"Videos"))
+elif file_extension in audio_extensions:
+    return Path(os.path.join(user_home,"Music"))
+elif file_extension in document_extensions:
+    return Path(os.path.join(user_home,"Documents/Documents"))
+elif file_extension in spreadsheet_extensions:
+    return Path(os.path.join(user_home,"Documents/Spreadsheets"))
+elif file_extension in presentation_extensions:
+    return Path(os.path.join(user_home,"Documents/Presentations"))
+elif file_extension in archive_extensions:
+    return Path(os.path.join(user_home,"Documents/Archives"))
+elif file_extension in code_extensions:
+    return Path(os.path.join(user_home,"Documents/Code Files"))
+elif file_extension in exe_extensions:
+    return Path(os.path.join(user_home,"Documents/Executables"))
+elif file_extension in diagram_extensions:
+    return Path(os.path.join(user_home,"Documents/Diagrams"))
+elif file_extension in book_extensions:
+    return Path(os.path.join(user_home,"Documents/Books"))
+else:
+    return Path(os.path.join(user_home,"Documents/Others"))
 ```
 
 Modify these lists to match your preferences.
