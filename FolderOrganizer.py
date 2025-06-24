@@ -101,7 +101,6 @@ file_path_dict = {}
 
 def move_files(dir_path):
     os.chdir(dir_path)
-    print(os.listdir())
     files = os.listdir()
     # Iterate through all the files in the dir.
     for file in files:
