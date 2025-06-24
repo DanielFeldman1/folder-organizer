@@ -7,7 +7,6 @@ A simple and reversible Python script to organize your Downloads folder by file 
 - ✅ Automatically organizes files into folders by type  
 - ✅ Reversible: undo and restore original file locations  
 - ✅ Lightweight and easy to customize  
-- ✅ No external libraries needed  
 
 ## 🚀 Getting Started
 
