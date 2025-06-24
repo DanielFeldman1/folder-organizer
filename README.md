@@ -13,7 +13,7 @@ A simple and reversible Python script to organize your Downloads folder by file 
 
 1. **Clone the repository**  
 ```bash
-git clone https://github.com/your-username/downloads-organizer.git
+git clone https://github.com/DanielFeldman1/folder-organizer.git
 cd downloads-organizer
 ```
 
