@@ -7,7 +7,9 @@ Created on Sat Apr 19 15:19:45 2025
 
 import os
 import json
-os.chdir("C:/Users/danie/Downloads")
+from pathlib import Path
+user_home = Path.home()
+os.chdir(Path(os.path.join(user_home,"Downloads")))
 status_file_descriptor = open("file_move_status.json",'r')
 file_move_status = json.load(status_file_descriptor)
 passes = 0

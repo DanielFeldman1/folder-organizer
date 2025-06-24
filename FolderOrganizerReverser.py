@@ -11,7 +11,8 @@ import json
 from pathlib import Path
 
 file_status = {} # Dict for filename : status
-os.chdir('C:/Users/danie/Downloads')
+user_home = Path.home()
+os.chdir(Path(os.path.join(user_home,"Downloads")))
 log_file_descriptor = open("moved_files_log.json",'r')
 
 file_path_dict = json.load(log_file_descriptor)

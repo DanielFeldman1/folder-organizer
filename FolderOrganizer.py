@@ -56,6 +56,8 @@ diagram_extensions = {".drawio",".vpp",".bak_000f",".tdl"}
 # Books
 book_extensions = {".epub"}
 
+user_home = Path.home()
+
 # Exports a log file based on moved file logs so far.
 def export_log_file():
     # Create a json file that contains the source path and new path for each file
@@ -70,29 +72,29 @@ def export_log_file():
 # Receives a file extension and returns the path the file needs to be sent to.
 def get_new_file_path(file_extension):
     if file_extension in image_extensions:
-        return "C:/Users/danie/Pictures"
+        return Path(os.path.join(user_home,"Pictures"))
     elif file_extension in video_extensions:
-        return "C:/Users/danie/Videos"
+        return Path(os.path.join(user_home,"Videos"))
     elif file_extension in audio_extensions:
-        return "C:/Users/danie/Music"
+        return Path(os.path.join(user_home,"Music"))
     elif file_extension in document_extensions:
-        return "C:/Users/danie/Documents/Documents"
+        return Path(os.path.join(user_home,"Documents/Documents"))
     elif file_extension in spreadsheet_extensions:
-        return "C:/Users/danie/Documents/Spreadsheets"
+        return Path(os.path.join(user_home,"Documents/Spreadsheets"))
     elif file_extension in presentation_extensions:
-        return "C:/Users/danie/Documents/Presentations"
+        return Path(os.path.join(user_home,"Documents/Presentations"))
     elif file_extension in archive_extensions:
-        return "C:/Users/danie/Documents/Archives"
+        return Path(os.path.join(user_home,"Documents/Archives"))
     elif file_extension in code_extensions:
-        return "C:/Users/danie/Documents/Code Files"
+        return Path(os.path.join(user_home,"Documents/Code Files"))
     elif file_extension in exe_extensions:
-        return "C:/Users/danie/Documents/Executables"
+        return Path(os.path.join(user_home,"Documents/Executables"))
     elif file_extension in diagram_extensions:
-        return "C:/Users/danie/Documents/Diagrams"
+        return Path(os.path.join(user_home,"Documents/Diagrams"))
     elif file_extension in book_extensions:
-        return "C:/Users/danie/Documents/Books"
+        return Path(os.path.join(user_home,"Documents/Books"))
     else:
-        return "C:/Users/danie/Documents/Others"
+        return Path(os.path.join(user_home,"Documents/Others"))
 
 # A dictionary to log the source and new paths for each file.
 file_path_dict = {}
@@ -106,18 +108,15 @@ def move_files(dir_path):
         # Create Path object for file.
         file_path = Path(file)
         
-        if file_path.is_dir():    
-            # Recursively enter folder and repeat the process, log stays the main log
-            move_files(str(file_path.resolve()))
-            os.chdir(dir_path)
-            os.rmdir(str(file_path.resolve()))
-            continue
         
         # Get the file name & extension.
         file_name, file_extension = file_path.stem, file_path.suffix
         
         # Get new file path
         new_file_path = get_new_file_path(file_extension)
+        
+        if file_path.is_dir():    
+            new_file_path = Path(os.path.join(user_home,"Documents/Folders"))
         
         # Create a new folder if a folder by that name doesn't exist yet.
         if not os.path.exists(new_file_path):
@@ -153,7 +152,7 @@ def move_files(dir_path):
         # Log the file name, source path and new path.
         file_path_dict[f"{new_file_name}{file_extension}"] = {"source_path" : str(file_path.resolve()) , "new_path" : f"{new_full_file_path}"}
 
-move_files('C:/Users/danie/Downloads')    
+move_files(Path(os.path.join(user_home,"Downloads")))    
 export_log_file()
 
 """
@@ -161,9 +160,6 @@ Future ideas :
 [V] make it smarter, sort by photos, documents and so on.
 [V] Make it put stuff in the corresponding windows default folders like Pictures.
 [V] Make it reverseable so I don't have to manually move the files after each test.
-[V] Handle conflicts of files with the same name existing in the target folder.
-[V] Make it BFS/DFS to include files inside folders.
-[ ] Folders where file structure is important (?)
 [ ] Handle invisible file name conflicts with folders:
     (e.g: "root/ArtMarket.png", "root/archive/ArtMarket.png" where archive is a folder inside root)
 [ ] Make it run or a loop or event triggered, whenever a file is downloaded, it's
