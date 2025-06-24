@@ -26,6 +26,9 @@ python FolderOrganizer.py
 ```bash
 python FolderOrganizerReverser.py
 ```
+![Untitled](https://github.com/user-attachments/assets/66b1652a-92df-4f0b-baca-7f58fda7b5c7)
+
+
 
 ## 🧠 How It Works
 
@@ -39,6 +42,17 @@ Downloads/
 ├── Audio/
 └── Others/
 ```
+Before:
+
+![folder-organizer1](https://github.com/user-attachments/assets/23c5ccad-2bac-456a-a731-6f50143fbad2)
+
+After:
+
+![folder-organizer2](https://github.com/user-attachments/assets/118f6a18-54ac-421c-9c49-985167361b82)
+
+Saved paths in json:
+
+![folder-organizer3](https://github.com/user-attachments/assets/d81e4374-6648-4f6e-ab96-1ee013b98921)
 
 You can customize which extensions go into which folders by editing the extension lists inside the script.
 
